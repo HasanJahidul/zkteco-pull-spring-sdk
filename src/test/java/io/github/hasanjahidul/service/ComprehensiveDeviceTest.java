@@ -15,7 +15,7 @@ import java.util.List;
 public class ComprehensiveDeviceTest {
 
     // Configure device IP here
-    private static final String DEVICE_IP = "192.168.68.222"; // Change to test different device
+    private static final String DEVICE_IP = "172.22.22.37"; // Change to test a different device
     private static final int PORT = 4370;
 
     @Test
@@ -63,6 +63,7 @@ public class ComprehensiveDeviceTest {
                 System.out.println("✓ PIN Width: " + service.getPinWidth());
                 System.out.println("✓ Face Function: " + service.getFaceFunctionOn());
                 System.out.println("✓ Firmware Version: " + service.getFirmwareVersion());
+                System.out.println("✓ MAC Address: " + service.getMacAddress());
             } catch (Exception e) {
                 System.out.println("✗ Additional Info Error: " + e.getMessage());
             }
@@ -229,6 +230,10 @@ public class ComprehensiveDeviceTest {
                 
                 service.enableDevice();
                 System.out.println("✓ Device Enabled (Unlocked)");
+                Thread.sleep(1000);
+                
+                service.unlockDoor(3);
+                System.out.println("✓ Remote Door Unlock Sent (3 seconds)");
             } catch (Exception e) {
                 System.out.println("✗ Lock/Unlock Error: " + e.getMessage());
             }
@@ -308,6 +313,132 @@ public class ComprehensiveDeviceTest {
 
         } catch (Exception e) {
             System.err.println("Test failed with error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testAddUserToDevice() {
+        System.out.println("\n--- SPECIAL TEST: ADD USER ---");
+        try (ZKTecoDeviceService service = new ZKTecoDeviceService(DEVICE_IP, PORT)) {
+            if (service.connect()) {
+                System.out.println("Connected to device.");
+                
+                // Unique Identifier for test user
+                int testUid = 9999;
+                String testId = "TEST001";
+                
+                // Try to add the user
+                System.out.println("Sending add command for User: " + testId + " (UID: " + testUid + ")");
+                service.setUser(testUid, testId, "Java SDK Tester", "12345", 0, 0);
+                System.out.println("Command sent successfully.");
+                
+                // Wait to ensure device processes it
+                Thread.sleep(2000);
+                
+                // Verify
+                List<UserInfo> users = service.getUsers();
+                boolean userFound = users.stream().anyMatch(u -> testId.equals(u.getUserId()));
+                if (userFound) {
+                    System.out.println("✓ SUCCESS: New user " + testId + " was found on the device!");
+                } else {
+                    System.out.println("✗ FAILED: User " + testId + " was NOT found on the device after adding.");
+                }
+            } else {
+                System.out.println("✗ Failed to connect to device.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error adding user: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testEditUserOnDevice() {
+        System.out.println("\n--- SPECIAL TEST: EDIT USER ---");
+        try (ZKTecoDeviceService service = new ZKTecoDeviceService(DEVICE_IP, PORT)) {
+            if (service.connect()) {
+                System.out.println("Connected to device.");
+                
+                // Unique Identifier for test user
+                int testUid = 9999;
+                String testId = "TEST001";
+                
+                // The setUser command functions as an UPSERT (Update or Insert)
+                // If a user with UID 9999 exists, it will overwrite their properties.
+                System.out.println("Sending edit command for User: " + testId + " (UID: " + testUid + ")");
+                service.setUser(testUid, testId, "Edited JDK Tester", "88888", 0, 100);
+                System.out.println("Edit command sent successfully.");
+                
+                // Wait to ensure device processes it
+                Thread.sleep(2000);
+                
+                // Verify
+                List<UserInfo> users = service.getUsers();
+                boolean userFound = false;
+                for (UserInfo u : users) {
+                    if (testId.equals(u.getUserId())) {
+                        userFound = true;
+                        if ("Edited JDK Tester".equals(u.getName())) {
+                            System.out.println("✓ SUCCESS: User " + testId + " was successfully updated!");
+                        } else {
+                            System.out.println("✗ FAILED: User " + testId + " was found, but name wasn't updated.");
+                        }
+                        break;
+                    }
+                }
+                
+                if (!userFound) {
+                    System.out.println("✗ FAILED: User " + testId + " was NOT found on the device. (Did they exist?)");
+                }
+            } else {
+                System.out.println("✗ Failed to connect to device.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error editing user: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testDeleteUserFromDevice() {
+        System.out.println("\n--- SPECIAL TEST: DELETE USER ---");
+        try (ZKTecoDeviceService service = new ZKTecoDeviceService(DEVICE_IP, PORT)) {
+            if (service.connect()) {
+                System.out.println("Connected to device.");
+                
+                int testUid = 9999;
+                String testId = "TEST001";
+                
+                // Check if user exists first
+                List<UserInfo> initialUsers = service.getUsers();
+                boolean userExists = initialUsers.stream().anyMatch(u -> testId.equals(u.getUserId()));
+                
+                if (!userExists) {
+                    System.out.println("⚠ WARNING: User " + testId + " does not exist on the device. Cannot test deletion.");
+                    return;
+                }
+                
+                System.out.println("User " + testId + " found. Sending delete command...");
+                service.removeUser(testUid);
+                System.out.println("Delete command sent successfully.");
+                
+                // Wait to ensure device processes it
+                Thread.sleep(2000);
+                
+                // Verify
+                List<UserInfo> finalUsers = service.getUsers();
+                boolean userStillExists = finalUsers.stream().anyMatch(u -> testId.equals(u.getUserId()));
+                if (!userStillExists) {
+                    System.out.println("✓ SUCCESS: User " + testId + " was completely removed from the device!");
+                } else {
+                    System.out.println("✗ FAILED: User " + testId + " is STILL on the device after deletion.");
+                }
+            } else {
+                System.out.println("✗ Failed to connect to device.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error deleting user: " + e.getMessage());
             e.printStackTrace();
         }
     }

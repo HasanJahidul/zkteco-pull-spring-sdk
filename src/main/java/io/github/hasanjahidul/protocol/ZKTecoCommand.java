@@ -78,6 +78,8 @@ public class ZKTecoCommand {
     public static final int CMD_SLEEP = 1006;
     /** Command to resume device from sleep */
     public static final int CMD_RESUME = 1007;
+    /** Command to unlock the door */
+    public static final int CMD_UNLOCK = 31;
     
     // Function codes
     /** Function code for attendance log */

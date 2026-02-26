@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class UserRetrievalTest {
 
-    private static final String DEVICE_IP = "192.168.68.222";
+    private static final String DEVICE_IP = "172.22.22.37";
 
     @Test
     public void testGetUsers() {
@@ -34,7 +34,7 @@ public class UserRetrievalTest {
             
             System.out.println("✓ Total Users Retrieved: " + users.size());
             
-            if (users.size() > 0) {
+            if (!users.isEmpty()) {
                 System.out.println("\nFirst 10 users:");
                 int count = Math.min(10, users.size());
                 for (int i = 0; i < count; i++) {

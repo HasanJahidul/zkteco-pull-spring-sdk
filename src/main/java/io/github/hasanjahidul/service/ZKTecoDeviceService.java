@@ -33,6 +33,16 @@ public class ZKTecoDeviceService implements AutoCloseable {
     }
 
     /**
+     * Create ZKTeco device service with a specific protocol instance (used for testing)
+     *
+     * @param protocol The ZKTecoProtocol to use
+     */
+    ZKTecoDeviceService(ZKTecoProtocol protocol) {
+        this.protocol = protocol;
+    }
+
+
+    /**
      * Create ZKTeco device service with custom port
      *
      * @param ipAddress IP address of the device
@@ -545,6 +555,35 @@ public class ZKTecoDeviceService implements AutoCloseable {
         }
         return protocol.getString(ZKTecoCommand.CMD_DEVICE, "FaceFunOn");
     }
+
+    /**
+     * Get MAC address
+     * 
+     * @return MAC address
+     */
+    public String getMacAddress() {
+        if (!protocol.isConnected()) {
+            throw new ZKTecoException("Not connected to device");
+        }
+        return protocol.getString(ZKTecoCommand.CMD_DEVICE, "MAC");
+    }
+
+    /**
+     * Unlock the door
+     *
+     * @param delay Delay in seconds before locking again
+     */
+    public void unlockDoor(int delay) {
+        if (!protocol.isConnected()) {
+            throw new ZKTecoException("Not connected to device");
+        }
+        byte[] commandData = new byte[2];
+        commandData[0] = (byte)(delay % 256);
+        commandData[1] = (byte)(delay >> 8);
+        protocol.sendCommand(ZKTecoCommand.CMD_UNLOCK, commandData);
+        log.info("Door unlocked for {} seconds", delay);
+    }
+
     
     /**
      * Get firmware version
