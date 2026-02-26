@@ -9,13 +9,13 @@ import java.util.List;
 /**
  * Manual test class for testing with TWO ZKTeco devices
  * Run this directly to test connectivity with devices at:
- * - 192.168.68.222
- * - 192.168.68.223
+ * - 172.22.22.37
+ * - 172.22.22.38
  */
 public class MultiDeviceTest {
 
     public static void main(String[] args) {
-        String[] deviceIps = {"192.168.68.222", "192.168.68.223"};
+        String[] deviceIps = {"172.22.22.37", "172.22.22.38"};
         int port = 4370;
         
         System.out.println("=".repeat(70));

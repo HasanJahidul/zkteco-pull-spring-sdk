@@ -2,6 +2,7 @@ package io.github.hasanjahidul.protocol;
 
 import io.github.hasanjahidul.exception.ZKTecoException;
 import io.github.hasanjahidul.util.PacketUtil;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
@@ -26,6 +27,13 @@ public class ZKTecoProtocol implements AutoCloseable {
     private InetAddress deviceAddress;
     private int sessionId = 0;
     private int replyId = USHRT_MAX - 1; // PHP uses -1 + USHRT_MAX = 65534
+    /**
+     * -- GETTER --
+     *  Check if connected to device
+     *
+     * @return true if connected
+     */
+    @Getter
     private boolean connected = false;
     private byte[] lastDataReceived = new byte[0];
 
@@ -118,15 +126,6 @@ public class ZKTecoProtocol implements AutoCloseable {
         if (socket != null && !socket.isClosed()) {
             socket.close();
         }
-    }
-
-    /**
-     * Check if connected to device
-     *
-     * @return true if connected
-     */
-    public boolean isConnected() {
-        return connected;
     }
 
     /**

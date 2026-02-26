@@ -15,7 +15,7 @@ public class ManualDeviceTest {
     public static void main(String[] args) {
         // Create service instance with your device IP
         // You can pass the IP as a command line argument or use default
-        String deviceIp = args.length > 0 ? args[0] : "192.168.68.222";
+        String deviceIp = args.length > 0 ? args[0] : "172.22.22.37";
         int port = args.length > 1 ? Integer.parseInt(args[1]) : 4370;
         
         System.out.println("=".repeat(60));
