@@ -1,6 +1,22 @@
 # spring-zkteco-pull-sdk
 Spring Boot Starter for ZKTeco Attendance Devices — Connect, fetch, and manage attendance data over TCP (port 4370).
 
+## Installation
+
+Add the following dependency to your `pom.xml`:
+```xml
+<dependency>
+    <groupId>com.hasanjahidul</groupId>
+    <artifactId>zkteco-pull-spring-sdk</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+For Gradle, add this to your `build.gradle`:
+```gradle
+implementation 'com.hasanjahidul:zkteco-pull-spring-sdk:1.0.0'
+```
+
 ## Features
 
 ### Connection Management
