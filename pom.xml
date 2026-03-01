@@ -6,12 +6,12 @@
 
     <groupId>com.hasanjahidul</groupId>
     <artifactId>zkteco-pull-spring-sdk</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>ZKTeco Spring SDK</name>
     <description>Spring SDK for ZKTeco Attendance Devices</description>
-    <url>https://github.com/hasanjaidul/spring-zkteco-pull-sdk</url>
+    <url>https://github.com/hasanjaidul/zkteco-pull-spring-sdk</url>
 
     <licenses>
         <license>
@@ -28,9 +28,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/hasanjaidul/spring-zkteco-pull-sdk.git</connection>
-        <developerConnection>scm:git:ssh://github.com/hasanjaidul/spring-zkteco-pull-sdk.git</developerConnection>
-        <url>https://github.com/hasanjaidul/spring-zkteco-pull-sdk</url>
+        <connection>scm:git:git://github.com/hasanjaidul/zkteco-pull-spring-sdk.git</connection>
+        <developerConnection>scm:git:ssh://github.com/hasanjaidul/zkteco-pull-spring-sdk.git</developerConnection>
+        <url>https://github.com/HasanJahidul/zkteco-pull-spring-sdk.git</url>
     </scm>
 
     <properties>
